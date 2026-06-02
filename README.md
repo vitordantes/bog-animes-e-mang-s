@@ -1,2 +1,2 @@
-# bog-animes-e-mang-s
-mangás e animes para todos os gostos
+# bog-animes
+animes para todos os gostos
