@@ -1,2 +1,2 @@
-# bog-animes
+# bog-animes-
 animes para todos os gostos.
