@@ -11,36 +11,36 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #121212;
-            color: #ffffff;
+            background-color: #121212; /* Preto de fundo */
+            color: #ffffff; /* Branco para os textos gerais */
         }
 
         /* Cabeçalho e Menu */
         header {
-            background-color: #1f1f1f;
+            background-color: #1c1c1c; /* Cinza bem escuro */
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px solid #ff4757;
+            border-bottom: 3px solid #1b4d3e; /* Verde Escuro */
             flex-wrap: wrap;
             gap: 15px;
         }
 
         header .logo-container {
-            border-left: 4px solid #ff4757;
+            border-left: 4px solid #1b4d3e; /* Verde Escuro */
             padding-left: 10px;
         }
 
         header h1 {
             margin: 0;
-            color: #ff4757;
+            color: #ffffff; /* Branco */
             font-size: 28px;
         }
 
         header p {
             margin: 5px 0 0 0;
-            color: #aaa;
+            color: #aaaaaa; /* Cinza claro */
             font-size: 14px;
         }
 
@@ -60,14 +60,14 @@
         }
 
         nav ul li a {
-            color: #ffffff;
+            color: #ffffff; /* Branco */
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s;
         }
 
         nav ul li a:hover {
-            color: #ff4757;
+            color: #1b4d3e; /* Verde Escuro no hover */
         }
 
         /* Barra de Pesquisa Amplificada */
@@ -78,9 +78,9 @@
         .search-container input {
             padding: 10px 15px;
             width: 250px;
-            border: 2px solid #333;
+            border: 2px solid #333333; /* Cinza escuro */
             border-radius: 20px;
-            background-color: #2d2d2d;
+            background-color: #2b2b2b; /* Cinza médio */
             color: white;
             font-size: 14px;
             transition: all 0.3s ease;
@@ -88,9 +88,9 @@
 
         .search-container input:focus {
             outline: none;
-            border-color: #ff4757;
+            border-color: #1b4d3e; /* Verde Escuro */
             width: 350px; 
-            box-shadow: 0 0 8px rgba(255, 71, 87, 0.6);
+            box-shadow: 0 0 8px rgba(27, 77, 62, 0.6);
         }
 
         /* Conteúdo Principal e Cards */
@@ -101,21 +101,22 @@
         }
 
         .welcome-box {
-            background-color: #1f1f1f;
+            background-color: #1c1c1c; /* Cinza escuro */
             padding: 15px 20px;
             border-radius: 8px;
             margin-bottom: 30px;
-            border-left: 5px solid #ff4757;
+            border-left: 5px solid #1b4d3e; /* Verde Escuro */
         }
 
         .welcome-box h2 {
             margin-top: 0;
             border: none;
             padding: 0;
+            color: #ffffff; /* Branco */
         }
 
         .welcome-box .author {
-            color: #ff4757;
+            color: #1b4d3e; /* Verde Escuro */
             font-style: italic;
             font-size: 14px;
         }
@@ -125,8 +126,9 @@
         }
 
         h2 {
-            border-left: 5px solid #ff4757;
+            border-left: 5px solid #1b4d3e; /* Verde Escuro */
             padding-left: 10px;
+            color: #ffffff; /* Branco */
         }
 
         .grid-container {
@@ -136,14 +138,15 @@
         }
 
         .card {
-            background-color: #1f1f1f;
+            background-color: #1c1c1c; /* Cinza escuro */
             border-radius: 8px;
             padding: 15px;
             width: 280px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.6);
             display: flex;
             flex-direction: column;
             gap: 10px;
+            border: 1px solid #2b2b2b; /* Detalhe em cinza */
         }
 
         .card img {
@@ -154,6 +157,11 @@
 
         .card h3 {
             margin: 5px 0;
+            color: #ffffff; /* Branco */
+        }
+
+        .card p {
+            color: #cccccc; /* Cinza claro */
         }
 
         /* Sistema de Curtidas */
@@ -165,9 +173,9 @@
         }
 
         .btn-like {
-            background-color: #2d2d2d;
+            background-color: #2b2b2b; /* Cinza médio */
             color: white;
-            border: 1px solid #444;
+            border: 1px solid #444444;
             padding: 6px 12px;
             border-radius: 20px;
             cursor: pointer;
@@ -175,14 +183,14 @@
         }
 
         .btn-like.liked {
-            background-color: #ff4757;
-            border-color: #ff4757;
+            background-color: #1b4d3e; /* Verde Escuro */
+            border-color: #1b4d3e;
         }
 
         /* Seção de Comentários */
         .comments-section {
             margin-top: 15px;
-            border-top: 1px solid #333;
+            border-top: 1px solid #333333;
             padding-top: 10px;
         }
 
@@ -191,14 +199,14 @@
             overflow-y: auto;
             margin-bottom: 10px;
             font-size: 13px;
-            color: #ccc;
+            color: #dddddd; /* Cinza muito claro */
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
 
         .comment-item {
-            background: #2d2d2d;
+            background: #2b2b2b; /* Cinza médio */
             padding: 5px 8px;
             border-radius: 4px;
         }
@@ -211,29 +219,36 @@
         .comment-input-container input {
             flex: 1;
             padding: 6px;
-            background-color: #2d2d2d;
-            border: 1px solid #444;
+            background-color: #2b2b2b; /* Cinza médio */
+            border: 1px solid #444444;
             color: white;
             border-radius: 4px;
             font-size: 12px;
         }
 
         .comment-input-container button {
-            background-color: #ff4757;
+            background-color: #1b4d3e; /* Verde Escuro */
             color: white;
             border: none;
             padding: 6px 10px;
             border-radius: 4px;
             cursor: pointer;
             font-size: 12px;
+            transition: background 0.3s;
+        }
+
+        .comment-input-container button:hover {
+            background-color: #143a2e; /* Verde ainda mais escuro no hover */
         }
 
         /* Rodapé */
         footer {
             text-align: center;
             padding: 20px;
-            background-color: #1f1f1f;
+            background-color: #1c1c1c; /* Cinza escuro */
             margin-top: 40px;
+            border-top: 1px solid #2b2b2b;
+            color: #aaaaaa;
         }
     </style>
 </head>
