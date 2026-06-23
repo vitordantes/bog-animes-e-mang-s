@@ -1,41 +1,397 @@
-
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
+    <title>Meu Blog do Roblox - Animes & Mangás</title>
+    
     <style>
-        header {
-            background-color: #302904;
-            color: #dad6c1; 
-            text-align: center;
-            max-width: 800px;
-            margin: 0 auto; 
-            padding: 20px;   
+        /* Configurações Gerais */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #ffffff;
         }
-        
-        main {
-            background-color: #3d3c38;
-            color: #dad6c1; 
-            max-width: 800px;
-            margin: 0 auto;
+
+        /* Cabeçalho e Menu */
+        header {
+            background-color: #1f1f1f;
             padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #ff4757;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        header .logo-container {
+            border-left: 4px solid #ff4757;
+            padding-left: 10px;
+        }
+
+        header h1 {
+            margin: 0;
+            color: #ff4757;
+            font-size: 28px;
+        }
+
+        header p {
+            margin: 5px 0 0 0;
+            color: #aaa;
+            font-size: 14px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav ul li a:hover {
+            color: #ff4757;
+        }
+
+        /* Barra de Pesquisa Amplificada */
+        .search-container {
+            position: relative;
+        }
+
+        .search-container input {
+            padding: 10px 15px;
+            width: 250px;
+            border: 2px solid #333;
+            border-radius: 20px;
+            background-color: #2d2d2d;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-container input:focus {
+            outline: none;
+            border-color: #ff4757;
+            width: 350px; 
+            box-shadow: 0 0 8px rgba(255, 71, 87, 0.6);
+        }
+
+        /* Conteúdo Principal e Cards */
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .welcome-box {
+            background-color: #1f1f1f;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid #ff4757;
+        }
+
+        .welcome-box h2 {
+            margin-top: 0;
+            border: none;
+            padding: 0;
+        }
+
+        .welcome-box .author {
+            color: #ff4757;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        h2 {
+            border-left: 5px solid #ff4757;
+            padding-left: 10px;
+        }
+
+        .grid-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            background-color: #1f1f1f;
+            border-radius: 8px;
+            padding: 15px;
+            width: 280px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .card img {
+            max-width: 100%;
+            border-radius: 4px;
+            align-self: center;
+        }
+
+        .card h3 {
+            margin: 5px 0;
+        }
+
+        /* Sistema de Curtidas */
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .btn-like {
+            background-color: #2d2d2d;
+            color: white;
+            border: 1px solid #444;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-like.liked {
+            background-color: #ff4757;
+            border-color: #ff4757;
+        }
+
+        /* Seção de Comentários */
+        .comments-section {
+            margin-top: 15px;
+            border-top: 1px solid #333;
+            padding-top: 10px;
+        }
+
+        .comments-list {
+            max-height: 80px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #ccc;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .comment-item {
+            background: #2d2d2d;
+            padding: 5px 8px;
+            border-radius: 4px;
+        }
+
+        .comment-input-container {
+            display: flex;
+            gap: 5px;
+        }
+
+        .comment-input-container input {
+            flex: 1;
+            padding: 6px;
+            background-color: #2d2d2d;
+            border: 1px solid #444;
+            color: white;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .comment-input-container button {
+            background-color: #ff4757;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Rodapé */
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #1f1f1f;
+            margin-top: 40px;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>Meu blog do roblox</h1>
-        <p>vou compartilhar sobre animes e mangás</p>
-    </header> 
+        <div class="logo-container">
+            <h1>Meu blog do roblox</h1>
+            <p>Vou compartilhar sobre animes e mangás</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#animes">Animes</a></li>
+                <li><a href="#mangas">Mangás</a></li>
+            </ul>
+            <div class="search-container">
+                <input type="text" id="searchBar" placeholder="Pesquisar anime ou mangá..." oninput="filtrarConteudo()">
+            </div>
+        </nav>
+    </header>
 
     <main>
-        <h2>meu primeiro post</h2>
-        <p>por: vitor hugo de almeida</p>
-        <p>boas vindas ao meu novo blog!</p>
+        <div class="welcome-box">
+            <h2>Meu Primeiro Post</h2>
+            <p class="author">Por: Vitor Hugo de Almeida</p>
+            <p>Boas-vindas ao meu novo blog! Aqui você vai encontrar tudo sobre os melhores animes e mangás do momento.</p>
+        </div>
+
+        <section id="animes">
+            <h2>Animes em Destaque</h2>
+            <div class="grid-container">
+                <div class="card" data-title="Naruto">
+                    <img src="https://via.placeholder.com/150" alt="Naruto">
+                    <h3>Naruto</h3>
+                    <p>A jornada de um jovem ninja que sonha em se tornar o Hokage.</p>
+                    <div class="actions">
+                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comments-list"></div>
+                        <div class="comment-input-container">
+                            <input type="text" placeholder="Adicione um comentário...">
+                            <button onclick="adicionarComentario(this)">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" data-title="One Piece">
+                    <img src="https://via.placeholder.com/150" alt="One Piece">
+                    <h3>One Piece</h3>
+                    <p>Luffy e sua tripulação em busca do tesouro supremo.</p>
+                    <div class="actions">
+                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comments-list"></div>
+                        <div class="comment-input-container">
+                            <input type="text" placeholder="Adicione um comentário...">
+                            <button onclick="adicionarComentario(this)">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mangas">
+            <h2>Mangás Populares</h2>
+            <div class="grid-container">
+                <div class="card" data-title="Chainsaw Man">
+                    <img src="https://via.placeholder.com/150" alt="Chainsaw Man">
+                    <h3>Chainsaw Man</h3>
+                    <p>Um jovem que se funde com um demônio motosserra.</p>
+                    <div class="actions">
+                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comments-list"></div>
+                        <div class="comment-input-container">
+                            <input type="text" placeholder="Adicione um comentário...">
+                            <button onclick="adicionarComentario(this)">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" data-title="Demon Slayer">
+                    <img src="https://via.placeholder.com/150" alt="Demon Slayer">
+                    <h3>Demon Slayer</h3>
+                    <p>Tanjiro luta para salvar sua irmã e vingar sua família.</p>
+                    <div class="actions">
+                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comments-list"></div>
+                        <div class="comment-input-container">
+                            <input type="text" placeholder="Adicione um comentário...">
+                            <button onclick="adicionarComentario(this)">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
+    <footer>
+        <p>&copy; 2026 Meu Blog do Roblox - Feito por Vitor Hugo.</p>
+    </footer>
+
+    <script>
+        // 1. Sistema de Curtidas
+        function curtir(botao) {
+            const contador = botao.querySelector('.like-count');
+            let curtidas = parseInt(contador.innerText);
+            
+            if (botao.classList.contains('liked')) {
+                botao.classList.remove('liked');
+                curtidas--;
+            } else {
+                botao.classList.add('liked');
+                curtidas++;
+            }
+            contador.innerText = curtidas;
+        }
+
+        // 2. Sistema de Comentários
+        function adicionarComentario(botao) {
+            const containerInput = botao.parentElement;
+            const input = containerInput.querySelector('input');
+            const textoComentario = input.value.trim();
+            
+            if (textoComentario === '') return;
+
+            const card = botao.closest('.card');
+            const listaComentarios = card.querySelector('.comments-list');
+
+            const novoComentario = document.createElement('div');
+            novoComentario.classList.add('comment-item');
+            novoComentario.innerText = textoComentario;
+
+            listaComentarios.appendChild(novoComentario);
+            input.value = ''; 
+            
+            listaComentarios.scrollTop = listaComentarios.scrollHeight;
+        }
+
+        // 3. Sistema de Pesquisa Avançado
+        function filtrarConteudo() {
+            const termoPesquisa = document.getElementById('searchBar').value.toLowerCase();
+            const cards = document.querySelectorAll('.card');
+
+            cards.forEach(card => {
+                const titulo = card.getAttribute('data-title').toLowerCase();
+                if (titulo.includes(termoPesquisa)) {
+                    card.style.display = "flex"; 
+                } else {
+                    card.style.display = "none"; 
+                }
+            });
+        }
+    </script>
 </body>
 </html>
