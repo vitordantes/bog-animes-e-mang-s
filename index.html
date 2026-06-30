@@ -151,6 +151,8 @@
 
         .card img {
             max-width: 100%;
+            height: 380px; /* Mantém um padrão visual para as capas */
+            object-fit: cover;
             border-radius: 4px;
             align-self: center;
         }
@@ -162,6 +164,9 @@
 
         .card p {
             color: #cccccc; /* Cinza claro */
+            font-size: 14px;
+            height: 60px; /* Limita a altura do texto para alinhar os cards */
+            overflow: hidden;
         }
 
         /* Sistema de Curtidas */
@@ -280,10 +285,11 @@
         <section id="animes">
             <h2>Animes em Destaque</h2>
             <div class="grid-container">
-                <div class="card" data-title="Naruto">
-                    <img src="https://via.placeholder.com/150" alt="Naruto">
-                    <h3>Naruto</h3>
-                    <p>A jornada de um jovem ninja que sonha em se tornar o Hokage.</p>
+                <!-- CARD JUJUTSU KAISEN -->
+                <div class="card" data-title="Jujutsu Kaisen">
+                    <img src="https://images.justwatch.com/poster/310546688/s372/jujutsu-kaisen" alt="Jujutsu Kaisen">
+                    <h3>Jujutsu Kaisen</h3>
+                    <p>Yuji Itadori engole um dedo amaldiçoado para salvar seus amigos e entra no mundo dos feiticeiros Jujutsu.</p>
                     <div class="actions">
                         <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
                     </div>
@@ -296,10 +302,11 @@
                     </div>
                 </div>
 
-                <div class="card" data-title="One Piece">
-                    <img src="https://via.placeholder.com/150" alt="One Piece">
-                    <h3>One Piece</h3>
-                    <p>Luffy e sua tripulação em busca do tesouro supremo.</p>
+                <!-- CARD BOKU NO HERO -->
+                <div class="card" data-title="Boku no Hero">
+                    <img src="https://images.justwatch.com/poster/306782415/s372/my-hero-academia" alt="Boku no Hero">
+                    <h3>Boku no Hero</h3>
+                    <p>Em um mundo onde quase todos têm superpoderes, o jovem Izuku Midoriya herda os poderes do maior herói de todos.</p>
                     <div class="actions">
                         <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
                     </div>
@@ -317,10 +324,11 @@
         <section id="mangas">
             <h2>Mangás Populares</h2>
             <div class="grid-container">
-                <div class="card" data-title="Chainsaw Man">
-                    <img src="https://via.placeholder.com/150" alt="Chainsaw Man">
-                    <h3>Chainsaw Man</h3>
-                    <p>Um jovem que se funde com um demônio motosserra.</p>
+                <!-- CARD GACHIAKUTA -->
+                <div class="card" data-title="Gachiakuta">
+                    <img src="https://m.media-amazon.com/images/I/81I3R9DmsvL._AC_UF1000,1000_QL80_.jpg" alt="Gachiakuta">
+                    <h3>Gachiakuta</h3>
+                    <p>Ludo é jogado no Abismo por um crime que não cometeu, e agora busca vingança usando os poderes de objetos descartados.</p>
                     <div class="actions">
                         <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
                     </div>
@@ -333,10 +341,11 @@
                     </div>
                 </div>
 
-                <div class="card" data-title="Demon Slayer">
-                    <img src="https://via.placeholder.com/150" alt="Demon Slayer">
-                    <h3>Demon Slayer</h3>
-                    <p>Tanjiro luta para salvar sua irmã e vingar sua família.</p>
+                <!-- CARD SENSE LIFE -->
+                <div class="card" data-title="Sense Life">
+                    <img src="https://via.placeholder.com/280x380/2b2b2b/ffffff?text=Sense+Life" alt="Sense Life">
+                    <h3>Sense Life</h3>
+                    <p>Uma incrível história cheia de mistérios, ação e reviravoltas marcantes no universo dos mangás.</p>
                     <div class="actions">
                         <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
                     </div>
