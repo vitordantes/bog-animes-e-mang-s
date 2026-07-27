@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Blog de animes e mangás- Animes & Mangás</title>
+    <title>Meu Blog de animes e mangás - Animes & Mangás</title>
     
     <style>
         /* Configurações Gerais */
@@ -145,7 +145,7 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.6);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             border: 1px solid #2b2b2b; /* Detalhe em cinza */
         }
 
@@ -158,15 +158,26 @@
         }
 
         .card h3 {
-            margin: 5px 0;
+            margin: 5px 0 0 0;
             color: #ffffff; /* Branco */
+        }
+
+        .card .meta-info {
+            font-size: 12px;
+            color: #1b4d3e;
+            font-weight: bold;
+            background: #2b2b2b;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
         }
 
         .card p {
             color: #cccccc; /* Cinza claro */
-            font-size: 14px;
-            height: 65px; /* Limita o tamanho do texto para os cards ficarem alinhados */
+            font-size: 13px;
+            height: 60px; /* Limita o tamanho do texto para os cards ficarem alinhados */
             overflow: hidden;
+            margin: 0;
         }
 
         /* Sistema de Curtidas */
@@ -174,7 +185,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .btn-like {
@@ -194,16 +205,16 @@
 
         /* Seção de Comentários */
         .comments-section {
-            margin-top: 15px;
+            margin-top: 10px;
             border-top: 1px solid #333333;
-            padding-top: 10px;
+            padding-top: 8px;
         }
 
         .comments-list {
-            max-height: 80px;
+            max-height: 70px;
             overflow-y: auto;
-            margin-bottom: 10px;
-            font-size: 13px;
+            margin-bottom: 8px;
+            font-size: 12px;
             color: #dddddd; /* Cinza muito claro */
             display: flex;
             flex-direction: column;
@@ -212,7 +223,7 @@
 
         .comment-item {
             background: #2b2b2b; /* Cinza médio */
-            padding: 5px 8px;
+            padding: 4px 6px;
             border-radius: 4px;
         }
 
@@ -223,22 +234,22 @@
 
         .comment-input-container input {
             flex: 1;
-            padding: 6px;
+            padding: 5px;
             background-color: #2b2b2b; /* Cinza médio */
             border: 1px solid #444444;
             color: white;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
         }
 
         .comment-input-container button {
             background-color: #1b4d3e; /* Verde Escuro */
             color: white;
             border: none;
-            padding: 6px 10px;
+            padding: 5px 8px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             transition: background 0.3s;
         }
 
@@ -285,9 +296,11 @@
         <section id="animes">
             <h2>Animes em Destaque</h2>
             <div class="grid-container">
+                <!-- Anime 1 -->
                 <div class="card" data-title="Jujutsu Kaisen">
                     <img src="https://images.justwatch.com/poster/310546688/s372/jujutsu-kaisen" alt="Jujutsu Kaisen">
                     <h3>Jujutsu Kaisen</h3>
+                    <span class="meta-info">MAPPA • 2020 • Nota: 8.6</span>
                     <p>Yuji Itadori engole um objeto amaldiçoado e entra para uma escola de feiticeiros para combater maldições.</p>
                     <div class="actions">
                         <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
@@ -301,10 +314,48 @@
                     </div>
                 </div>
 
+                <!-- Anime 2 -->
                 <div class="card" data-title="Boku no Hero">
                     <img src="https://images.justwatch.com/poster/306782415/s372/my-hero-academia" alt="Boku no Hero">
                     <h3>Boku no Hero</h3>
+                    <span class="meta-info">Bones • 2016 • Nota: 7.8</span>
                     <p>Izuku Midoriya sonha em se tornar um grande herói em um mundo onde quase todos nascem com poderes.</p>
+                    <div class="actions">
+                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comments-list"></div>
+                        <div class="comment-input-container">
+                            <input type="text" placeholder="Adicione um comentário...">
+                            <button onclick="adicionarComentario(this)">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anime 3 (Adicionado) -->
+                <div class="card" data-title="Attack on Titan">
+                    <img src="https://images.justwatch.com/poster/8589745/s372/attack-on-titan" alt="Attack on Titan">
+                    <h3>Attack on Titan</h3>
+                    <span class="meta-info">Wit/MAPPA • 2013 • Nota: 9.1</span>
+                    <p>Ahumanidade luta pela sobrevivência dentro de cidades cercadas por enormes muralhas contra Titãs devoradores de homens.</p>
+                    <div class="actions">
+                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comments-list"></div>
+                        <div class="comment-input-container">
+                            <input type="text" placeholder="Adicione um comentário...">
+                            <button onclick="adicionarComentario(this)">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Anime 4 (Adicionado) -->
+                <div class="card" data-title="Demon Slayer">
+                    <img src="https://images.justwatch.com/poster/243501867/s372/demon-slayer-kimetsu-no-yaiba" alt="Demon Slayer">
+                    <h3>Demon Slayer</h3>
+                    <span class="meta-info">ufotable • 2019 • Nota: 8.6</span>
+                    <p>Tanjiro Kamado busca uma cura para sua irmã transformada em demônio e vinga sua família caçando criaturas da noite.</p>
                     <div class="actions">
                         <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
                     </div>
@@ -322,9 +373,11 @@
         <section id="mangas">
             <h2>Mangás Populares</h2>
             <div class="grid-container">
+                <!-- Mangá 1 -->
                 <div class="card" data-title="Gachiakuta">
                     <img src="https://m.media-amazon.com/images/I/81I3R9DmsvL._AC_UF1000,1000_QL80_.jpg" alt="Gachiakuta">
                     <h3>Gachiakuta</h3>
+                    <span class="meta-info">Kei Urana • 2022 • Nota: 8.3</span>
                     <p>Ludo vive na favela e é falsamente acusado de um crime, sendo jogado no temido Abismo cheio de lixo e perigos.</p>
                     <div class="actions">
                         <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
@@ -338,10 +391,48 @@
                     </div>
                 </div>
 
+                <!-- Mangá 2 -->
                 <div class="card" data-title="Sense Life">
                     <img src="https://via.placeholder.com/280x380/2b2b2b/ffffff?text=Sense+Life" alt="Sense Life">
                     <h3>Sense Life</h3>
+                    <span class="meta-info">Indie • 2024 • Nota: 7.5</span>
                     <p>Uma história envolvente sobre descobertas, superação e mistérios no cotidiano dos mangás.</p>
+                    <div class="actions">
+                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comments-list"></div>
+                        <div class="comment-input-container">
+                            <input type="text" placeholder="Adicione um comentário...">
+                            <button onclick="adicionarComentario(this)">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mangá 3 (Adicionado) -->
+                <div class="card" data-title="Chainsaw Man">
+                    <img src="https://m.media-amazon.com/images/I/91u1vN78YlL._AC_UF1000,1000_QL80_.jpg" alt="Chainsaw Man">
+                    <h3>Chainsaw Man</h3>
+                    <span class="meta-info">Tatsuki Fujimoto • 2018 • Nota: 8.8</span>
+                    <p>Denji vive na miséria fundindo-se com seu demônio de estimação Pochita, até que renasce como o homem-motosserra.</p>
+                    <div class="actions">
+                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
+                    </div>
+                    <div class="comments-section">
+                        <div class="comments-list"></div>
+                        <div class="comment-input-container">
+                            <input type="text" placeholder="Adicione um comentário...">
+                            <button onclick="adicionarComentario(this)">Enviar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Mangá 4 (Adicionado) -->
+                <div class="card" data-title="One Piece">
+                    <img src="https://m.media-amazon.com/images/I/81b2aCg1c8L._AC_UF1000,1000_QL80_.jpg" alt="One Piece">
+                    <h3>One Piece</h3>
+                    <span class="meta-info">Eiichiro Oda • 1997 • Nota: 9.2</span>
+                    <p>Monkey D. Luffy navega pelos mares com sua tripulação em busca do lendário tesouro para se tornar o Rei dos Piratas.</p>
                     <div class="actions">
                         <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
                     </div>
@@ -358,7 +449,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2026 Meu Blog de animes e mangás- Feito por Vitor Hugo.</p>
+        <p>&copy; 2026 Meu Blog de animes e mangás - Feito por Vitor Hugo.</p>
     </footer>
 
     <script>
