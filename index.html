@@ -1,508 +1,845 @@
+O código foi corrigido: a terceira fileira foi removida da tela inicial (agora dividida entre **Animes Populares** e **Mangás Populares** de todos os gêneros) e a busca foi refatorada para pesquisar em ambos os catálogos simultaneamente.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu Blog de animes e mangás - Animes & Mangás</title>
+    <title>AniMangá Hub | Yellow & Black Edition</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        /* Configurações Gerais */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        :root {
+            --preto-fundo: #0a0a0a;
+            --preto-card: #181818;
+            --preto-hover: #222222;
+            --amarelo-destaque: #ffcc00;
+            --amarelo-hover: #e6b800;
+            --texto-branco: #ffffff;
+            --texto-cinza: #aaaaaa;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            background-color: #121212; /* Preto de fundo */
-            color: #ffffff; /* Branco para os textos gerais */
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Cabeçalho e Menu */
+        body {
+            background-color: var(--preto-fundo);
+            color: var(--texto-branco);
+            min-height: 100vh;
+            padding: 20px 10px 50px 10px;
+        }
+
         header {
-            background-color: #1c1c1c; /* Cinza bem escuro */
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 3px solid #1b4d3e; /* Verde Escuro */
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        header .logo-container {
-            border-left: 4px solid #1b4d3e; /* Verde Escuro */
-            padding-left: 10px;
+            background-color: #000000;
+            color: var(--amarelo-destaque);
+            text-align: center;
+            max-width: 1000px;
+            margin: 0 auto 20px auto;
+            padding: 20px 16px;
+            border-bottom: 4px solid var(--amarelo-destaque);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(255, 204, 0, 0.15);
         }
 
         header h1 {
-            margin: 0;
-            color: #ffffff; /* Branco */
-            font-size: 28px;
+            font-size: 26px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
         }
 
-        header p {
-            margin: 5px 0 0 0;
-            color: #aaaaaa; /* Cinza claro */
-            font-size: 14px;
-        }
-
-        nav {
+        .controls {
             display: flex;
-            align-items: center;
-            gap: 20px;
             flex-wrap: wrap;
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            gap: 20px;
-        }
-
-        nav ul li a {
-            color: #ffffff; /* Branco */
-            text-decoration: none;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-
-        nav ul li a:hover {
-            color: #1b4d3e; /* Verde Escuro no hover */
-        }
-
-        /* Barra de Pesquisa Amplificada */
-        .search-container {
-            position: relative;
-        }
-
-        .search-container input {
-            padding: 10px 15px;
-            width: 250px;
-            border: 2px solid #333333; /* Cinza escuro */
-            border-radius: 20px;
-            background-color: #2b2b2b; /* Cinza médio */
-            color: white;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .search-container input:focus {
-            outline: none;
-            border-color: #1b4d3e; /* Verde Escuro */
-            width: 350px; 
-            box-shadow: 0 0 8px rgba(27, 77, 62, 0.6);
-        }
-
-        /* Conteúdo Principal e Cards */
-        main {
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .welcome-box {
-            background-color: #1c1c1c; /* Cinza escuro */
-            padding: 15px 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border-left: 5px solid #1b4d3e; /* Verde Escuro */
-        }
-
-        .welcome-box h2 {
-            margin-top: 0;
-            border: none;
-            padding: 0;
-            color: #ffffff; /* Branco */
-        }
-
-        .welcome-box .author {
-            color: #1b4d3e; /* Verde Escuro */
-            font-style: italic;
-            font-size: 14px;
-        }
-
-        section {
-            margin-bottom: 40px;
-        }
-
-        h2 {
-            border-left: 5px solid #1b4d3e; /* Verde Escuro */
-            padding-left: 10px;
-            color: #ffffff; /* Branco */
-        }
-
-        .grid-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .card {
-            background-color: #1c1c1c; /* Cinza escuro */
-            border-radius: 8px;
-            padding: 15px;
-            width: 280px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.6);
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            border: 1px solid #2b2b2b; /* Detalhe em cinza */
-        }
-
-        .card img {
-            max-width: 100%;
-            height: 380px; /* Define altura fixa para padronizar os cards */
-            object-fit: cover; /* Faz a imagem cobrir o espaço sem distorcer */
-            border-radius: 4px;
-            align-self: center;
-        }
-
-        .card h3 {
-            margin: 5px 0 0 0;
-            color: #ffffff; /* Branco */
-        }
-
-        .card .meta-info {
-            font-size: 12px;
-            color: #1b4d3e;
-            font-weight: bold;
-            background: #2b2b2b;
-            padding: 4px 8px;
-            border-radius: 4px;
-            display: inline-block;
-        }
-
-        .card p {
-            color: #cccccc; /* Cinza claro */
-            font-size: 13px;
-            height: 60px; /* Limita o tamanho do texto para os cards ficarem alinhados */
-            overflow: hidden;
-            margin: 0;
-        }
-
-        /* Sistema de Curtidas */
-        .actions {
-            display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 5px;
+            gap: 12px;
+            margin-top: 15px;
         }
 
-        .btn-like {
-            background-color: #2b2b2b; /* Cinza médio */
-            color: white;
-            border: 1px solid #444444;
-            padding: 6px 12px;
+        .tabs-nav {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: var(--preto-card);
+            border: 1px solid var(--amarelo-destaque);
+            color: var(--texto-branco);
+            padding: 6px 14px;
             border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s;
         }
 
-        .btn-like.liked {
-            background-color: #1b4d3e; /* Verde Escuro */
-            border-color: #1b4d3e;
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--amarelo-destaque);
+            color: #000000;
         }
 
-        /* Seção de Comentários */
-        .comments-section {
-            margin-top: 10px;
-            border-top: 1px solid #333333;
-            padding-top: 8px;
+        .search-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
-        .comments-list {
-            max-height: 70px;
-            overflow-y: auto;
-            margin-bottom: 8px;
+        .search-box input, .filter-select {
+            background: #000000;
+            border: 1px solid var(--amarelo-destaque);
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 20px;
             font-size: 12px;
-            color: #dddddd; /* Cinza muito claro */
+            outline: none;
+        }
+
+        .search-box input {
+            width: 200px;
+        }
+
+        .filter-select {
+            cursor: pointer;
+        }
+
+        main {
+            background-color: var(--preto-card);
+            color: var(--texto-branco);
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+        }
+
+        .fileira-secao {
+            margin-bottom: 32px;
+        }
+
+        .fileira-titulo {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--amarelo-destaque);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+        }
+
+        .carrossel-container {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            padding-bottom: 12px;
+            scroll-behavior: smooth;
+        }
+
+        .carrossel-container::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .carrossel-container::-webkit-scrollbar-thumb {
+            background: var(--amarelo-destaque);
+            border-radius: 10px;
+        }
+
+        .carrossel-container::-webkit-scrollbar-track {
+            background: #000000;
+        }
+
+        article {
+            flex: 0 0 220px;
             display: flex;
             flex-direction: column;
-            gap: 5px;
+            background-color: var(--preto-hover);
+            padding: 12px;
+            border-left: 4px solid var(--amarelo-destaque);
+            border-radius: 8px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
         }
 
-        .comment-item {
-            background: #2b2b2b; /* Cinza médio */
-            padding: 4px 6px;
-            border-radius: 4px;
+        article:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 15px rgba(255, 204, 0, 0.2);
         }
 
-        .comment-input-container {
+        article img {
+            width: 100%;
+            height: 240px;
+            border-radius: 6px;
+            object-fit: cover;
+            border: 1px solid var(--amarelo-destaque);
+            margin-bottom: 10px;
+        }
+
+        .btn-fav {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--amarelo-destaque);
+            color: var(--amarelo-destaque);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
             display: flex;
-            gap: 5px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+            z-index: 10;
         }
 
-        .comment-input-container input {
-            flex: 1;
-            padding: 5px;
-            background-color: #2b2b2b; /* Cinza médio */
-            border: 1px solid #444444;
-            color: white;
-            border-radius: 4px;
+        .btn-fav:hover {
+            transform: scale(1.15);
+        }
+
+        .artigo-info {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .artigo-autor {
+            font-weight: bold;
+            color: var(--amarelo-destaque);
             font-size: 11px;
+            margin-bottom: 2px;
         }
 
-        .comment-input-container button {
-            background-color: #1b4d3e; /* Verde Escuro */
-            color: white;
+        article h3 {
+            font-size: 14px;
+            color: #ffffff;
+            margin-bottom: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        article p {
+            font-size: 11px;
+            color: var(--texto-cinza);
+            margin-bottom: 10px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            height: 28px;
+        }
+
+        .btn-read {
+            background: var(--amarelo-destaque);
+            color: #000000;
             border: none;
-            padding: 5px 8px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: background 0.2s;
+            width: 100%;
+        }
+
+        .btn-read:hover {
+            background: var(--amarelo-hover);
+        }
+
+        .grid-pesquisa {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        /* Modal & Player */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #121212;
+            border: 2px solid var(--amarelo-destaque);
+            border-radius: 12px;
+            padding: 20px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            color: #ffffff;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--amarelo-destaque);
+        }
+
+        .sub-text {
+            font-size: 12px;
+            color: var(--texto-cinza);
+            margin-top: 6px;
+        }
+
+        .trailer-container {
+            margin: 14px 0;
+            width: 100%;
+        }
+
+        .trailer-container iframe {
+            width: 100%;
+            height: 260px;
+            border-radius: 8px;
+            border: 1px solid var(--amarelo-destaque);
+        }
+
+        .capitulos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .capitulo-btn {
+            background: #000000;
+            border: 1px solid var(--amarelo-destaque);
+            color: var(--amarelo-destaque);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .capitulo-btn:hover {
+            background: var(--amarelo-destaque);
+            color: #000000;
+        }
+
+        .viewer-container {
+            display: none;
+            margin-top: 20px;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            background: #000000;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #333333;
+        }
+
+        .btn-back {
+            background: var(--amarelo-destaque);
+            color: #000000;
+            border: none;
+            padding: 6px 12px;
             border-radius: 4px;
             cursor: pointer;
-            font-size: 11px;
-            transition: background 0.3s;
+            font-weight: bold;
+            font-size: 12px;
+            align-self: flex-start;
         }
 
-        .comment-input-container button:hover {
-            background-color: #143a2e; /* Verde ainda mais escuro no hover */
+        .btn-back:hover {
+            background: var(--amarelo-hover);
         }
 
-        /* Rodapé */
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #1c1c1c; /* Cinza escuro */
-            margin-top: 40px;
-            border-top: 1px solid #2b2b2b;
-            color: #aaaaaa;
+        .video-player {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #050505;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--amarelo-destaque);
+        }
+
+        .loading-text {
+            color: var(--amarelo-destaque);
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #181818;
+            border: 1px solid var(--amarelo-destaque);
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 4px 20px rgba(255, 204, 0, 0.2);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 3000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-container">
-            <h1>Meu blog de animes e mangás</h1>
-            <p>Vou compartilhar sobre animes e mangás</p>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="#animes">Animes</a></li>
-                <li><a href="#mangas">Mangás</a></li>
-            </ul>
-            <div class="search-container">
-                <input type="text" id="searchBar" placeholder="Pesquisar anime ou mangá..." oninput="filtrarConteudo()">
+        <h1>AniMangá Hub ⚡</h1>
+        
+        <div class="controls">
+            <nav class="tabs-nav">
+                <button class="tab-btn active" onclick="switchTab('all', this)">Início</button>
+                <button class="tab-btn" onclick="switchTab('anime', this)">Animes</button>
+                <button class="tab-btn" onclick="switchTab('manga', this)">Mangás</button>
+                <button class="tab-btn" onclick="switchTab('fav', this)">⭐ Minha Lista</button>
+            </nav>
+
+            <div class="search-group">
+                <select id="genreFilter" class="filter-select" onchange="executarPesquisa()">
+                    <option value="">Todos os Gêneros</option>
+                    <option value="1">Ação</option>
+                    <option value="2">Aventura</option>
+                    <option value="4">Comédia</option>
+                    <option value="8">Drama</option>
+                    <option value="10">Fantasia</option>
+                    <option value="14">Horror</option>
+                    <option value="22">Romance</option>
+                    <option value="24">Ficção Científica</option>
+                    <option value="36">Slice of Life</option>
+                    <option value="30">Esportes</option>
+                    <option value="37">Sobrenatural</option>
+                </select>
+
+                <div class="search-box">
+                    <input type="text" id="searchBar" placeholder="Pesquisar..." oninput="debounceSearch()">
+                </div>
             </div>
-        </nav>
+        </div>
     </header>
 
-    <main>
-        <div class="welcome-box">
-            <h2>Meu Primeiro Post</h2>
-            <p class="author">Por: Vitor Hugo de Almeida</p>
-            <p>Boas-vindas ao meu novo blog! Aqui você vai encontrar tudo sobre os melhores animes e mangás do momento.</p>
+    <main id="mainContainer"></main>
+
+    <!-- Modal com Player de Trailer e Episódios -->
+    <div id="modalCapitulos" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="fecharModal()">&times;</span>
+            <h2 id="modalTitulo" style="font-size: 18px; color: var(--amarelo-destaque);"></h2>
+            
+            <div id="trailerArea" class="trailer-container"></div>
+
+            <div id="listaCapitulosArea">
+                <p class="sub-text">Selecione uma opção para reproduzir ou ler:</p>
+                <div id="capitulosGrid" class="capitulos-grid"></div>
+            </div>
+
+            <div id="viewerContainer" class="viewer-container">
+                <button onclick="voltarParaLista()" class="btn-back">← Voltar aos capítulos</button>
+                <h3 id="viewerTitle" style="font-size: 15px; color: var(--amarelo-destaque);"></h3>
+                <div id="viewerContent" style="width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px;"></div>
+            </div>
         </div>
+    </div>
 
-        <section id="animes">
-            <h2>Animes em Destaque</h2>
-            <div class="grid-container">
-                <!-- Anime 1 -->
-                <div class="card" data-title="Jujutsu Kaisen">
-                    <img src="https://images.justwatch.com/poster/310546688/s372/jujutsu-kaisen" alt="Jujutsu Kaisen">
-                    <h3>Jujutsu Kaisen</h3>
-                    <span class="meta-info">MAPPA • 2020 • Nota: 8.6</span>
-                    <p>Yuji Itadori engole um objeto amaldiçoado e entra para uma escola de feiticeiros para combater maldições.</p>
-                    <div class="actions">
-                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
-                    </div>
-                    <div class="comments-section">
-                        <div class="comments-list"></div>
-                        <div class="comment-input-container">
-                            <input type="text" placeholder="Adicione um comentário...">
-                            <button onclick="adicionarComentario(this)">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Anime 2 -->
-                <div class="card" data-title="Boku no Hero">
-                    <img src="https://images.justwatch.com/poster/306782415/s372/my-hero-academia" alt="Boku no Hero">
-                    <h3>Boku no Hero</h3>
-                    <span class="meta-info">Bones • 2016 • Nota: 7.8</span>
-                    <p>Izuku Midoriya sonha em se tornar um grande herói em um mundo onde quase todos nascem com poderes.</p>
-                    <div class="actions">
-                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
-                    </div>
-                    <div class="comments-section">
-                        <div class="comments-list"></div>
-                        <div class="comment-input-container">
-                            <input type="text" placeholder="Adicione um comentário...">
-                            <button onclick="adicionarComentario(this)">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Anime 3 (Adicionado) -->
-                <div class="card" data-title="Attack on Titan">
-                    <img src="https://images.justwatch.com/poster/8589745/s372/attack-on-titan" alt="Attack on Titan">
-                    <h3>Attack on Titan</h3>
-                    <span class="meta-info">Wit/MAPPA • 2013 • Nota: 9.1</span>
-                    <p>Ahumanidade luta pela sobrevivência dentro de cidades cercadas por enormes muralhas contra Titãs devoradores de homens.</p>
-                    <div class="actions">
-                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
-                    </div>
-                    <div class="comments-section">
-                        <div class="comments-list"></div>
-                        <div class="comment-input-container">
-                            <input type="text" placeholder="Adicione um comentário...">
-                            <button onclick="adicionarComentario(this)">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Anime 4 (Adicionado) -->
-                <div class="card" data-title="Demon Slayer">
-                    <img src="https://images.justwatch.com/poster/243501867/s372/demon-slayer-kimetsu-no-yaiba" alt="Demon Slayer">
-                    <h3>Demon Slayer</h3>
-                    <span class="meta-info">ufotable • 2019 • Nota: 8.6</span>
-                    <p>Tanjiro Kamado busca uma cura para sua irmã transformada em demônio e vinga sua família caçando criaturas da noite.</p>
-                    <div class="actions">
-                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
-                    </div>
-                    <div class="comments-section">
-                        <div class="comments-list"></div>
-                        <div class="comment-input-container">
-                            <input type="text" placeholder="Adicione um comentário...">
-                            <button onclick="adicionarComentario(this)">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="mangas">
-            <h2>Mangás Populares</h2>
-            <div class="grid-container">
-                <!-- Mangá 1 -->
-                <div class="card" data-title="Gachiakuta">
-                    <img src="https://m.media-amazon.com/images/I/81I3R9DmsvL._AC_UF1000,1000_QL80_.jpg" alt="Gachiakuta">
-                    <h3>Gachiakuta</h3>
-                    <span class="meta-info">Kei Urana • 2022 • Nota: 8.3</span>
-                    <p>Ludo vive na favela e é falsamente acusado de um crime, sendo jogado no temido Abismo cheio de lixo e perigos.</p>
-                    <div class="actions">
-                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
-                    </div>
-                    <div class="comments-section">
-                        <div class="comments-list"></div>
-                        <div class="comment-input-container">
-                            <input type="text" placeholder="Adicione um comentário...">
-                            <button onclick="adicionarComentario(this)">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mangá 2 -->
-                <div class="card" data-title="Sense Life">
-                    <img src="https://via.placeholder.com/280x380/2b2b2b/ffffff?text=Sense+Life" alt="Sense Life">
-                    <h3>Sense Life</h3>
-                    <span class="meta-info">Indie • 2024 • Nota: 7.5</span>
-                    <p>Uma história envolvente sobre descobertas, superação e mistérios no cotidiano dos mangás.</p>
-                    <div class="actions">
-                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
-                    </div>
-                    <div class="comments-section">
-                        <div class="comments-list"></div>
-                        <div class="comment-input-container">
-                            <input type="text" placeholder="Adicione um comentário...">
-                            <button onclick="adicionarComentario(this)">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mangá 3 (Adicionado) -->
-                <div class="card" data-title="Chainsaw Man">
-                    <img src="https://m.media-amazon.com/images/I/91u1vN78YlL._AC_UF1000,1000_QL80_.jpg" alt="Chainsaw Man">
-                    <h3>Chainsaw Man</h3>
-                    <span class="meta-info">Tatsuki Fujimoto • 2018 • Nota: 8.8</span>
-                    <p>Denji vive na miséria fundindo-se com seu demônio de estimação Pochita, até que renasce como o homem-motosserra.</p>
-                    <div class="actions">
-                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
-                    </div>
-                    <div class="comments-section">
-                        <div class="comments-list"></div>
-                        <div class="comment-input-container">
-                            <input type="text" placeholder="Adicione um comentário...">
-                            <button onclick="adicionarComentario(this)">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Mangá 4 (Adicionado) -->
-                <div class="card" data-title="One Piece">
-                    <img src="https://m.media-amazon.com/images/I/81b2aCg1c8L._AC_UF1000,1000_QL80_.jpg" alt="One Piece">
-                    <h3>One Piece</h3>
-                    <span class="meta-info">Eiichiro Oda • 1997 • Nota: 9.2</span>
-                    <p>Monkey D. Luffy navega pelos mares com sua tripulação em busca do lendário tesouro para se tornar o Rei dos Piratas.</p>
-                    <div class="actions">
-                        <button class="btn-like" onclick="curtir(this)">❤️ <span class="like-count">0</span></button>
-                    </div>
-                    <div class="comments-section">
-                        <div class="comments-list"></div>
-                        <div class="comment-input-container">
-                            <input type="text" placeholder="Adicione um comentário...">
-                            <button onclick="adicionarComentario(this)">Enviar</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <footer>
-        <p>&copy; 2026 Meu Blog de animes e mangás - Feito por Vitor Hugo.</p>
-    </footer>
+    <!-- Sistema de Alertas (Toast) -->
+    <div id="toast" class="toast"></div>
 
     <script>
-        // 1. Sistema de Curtidas
-        function curtir(botao) {
-            const contador = botao.querySelector('.like-count');
-            let curtidas = parseInt(contador.innerText);
+        let currentTab = 'all';
+        let searchTimeout = null;
+        let scrollTimers = [];
+        let favoritos = JSON.parse(localStorage.getItem('favoritosHub') || '[]');
+
+        window.addEventListener('DOMContentLoaded', inicializarHome);
+
+        function switchTab(type, btn) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentTab = type;
             
-            if (botao.classList.contains('liked')) {
-                botao.classList.remove('liked');
-                curtidas--;
+            document.getElementById('searchBar').value = '';
+            document.getElementById('genreFilter').value = '';
+
+            if (currentTab === 'all') {
+                inicializarHome();
+            } else if (currentTab === 'fav') {
+                carregarFavoritos();
             } else {
-                botao.classList.add('liked');
-                curtidas++;
+                carregarPaginaEspecifica();
             }
-            contador.innerText = curtidas;
         }
 
-        // 2. Sistema de Comentários
-        function adicionarComentario(botao) {
-            const containerInput = botao.parentElement;
-            const input = containerInput.querySelector('input');
-            const textoComentario = input.value.trim();
-            
-            if (textoComentario === '') return;
-
-            const card = botao.closest('.card');
-            const listaComentarios = card.querySelector('.comments-list');
-
-            const novoComentario = document.createElement('div');
-            novoComentario.classList.add('comment-item');
-            novoComentario.innerText = textoComentario;
-
-            listaComentarios.appendChild(novoComentario);
-            input.value = ''; 
-            
-            listaComentarios.scrollTop = listaComentarios.scrollHeight;
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(executarPesquisa, 500);
         }
 
-        // 3. Sistema de Pesquisa Avançado
-        function filtrarConteudo() {
-            const termoPesquisa = document.getElementById('searchBar').value.toLowerCase();
-            const cards = document.querySelectorAll('.card');
+        function mostrarToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
 
-            cards.forEach(card => {
-                const titulo = card.getAttribute('data-title').toLowerCase();
-                if (titulo.includes(termoPesquisa)) {
-                    card.style.display = "flex"; 
+        function toggleFavorito(itemData) {
+            const item = typeof itemData === 'string' ? JSON.parse(decodeURIComponent(itemData)) : itemData;
+            const index = favoritos.findIndex(f => f.mal_id === item.mal_id);
+
+            if (index >= 0) {
+                favoritos.splice(index, 1);
+                mostrarToast(`"${item.title}" removido da sua lista.`);
+            } else {
+                favoritos.push(item);
+                mostrarToast(`"${item.title}" adicionado à sua lista! ⭐`);
+            }
+
+            localStorage.setItem('favoritosHub', JSON.stringify(favoritos));
+
+            if (currentTab === 'fav') {
+                carregarFavoritos();
+            } else {
+                document.querySelectorAll(`[data-id="${item.mal_id}"]`).forEach(btn => {
+                    const isFav = favoritos.some(f => f.mal_id === item.mal_id);
+                    btn.textContent = isFav ? '★' : '☆';
+                });
+            }
+        }
+
+        function carregarFavoritos() {
+            limparScrolls();
+            const main = document.getElementById('mainContainer');
+            main.innerHTML = `
+                <div class="fileira-titulo">⭐ Minha Lista de Favoritos</div>
+                <div class="grid-pesquisa" id="gridFavoritos"></div>
+            `;
+
+            const grid = document.getElementById('gridFavoritos');
+            if (favoritos.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; color: var(--texto-cinza); text-align: center; padding: 20px;">Sua lista está vazia. Adicione itens clicando na estrela ⭐</p>`;
+                return;
+            }
+
+            grid.innerHTML = favoritos.map(item => criarCardHTML(item)).join('');
+        }
+
+        function limparScrolls() {
+            scrollTimers.forEach(timer => clearInterval(timer));
+            scrollTimers = [];
+        }
+
+        function ativarAutoScroll(elementId) {
+            const container = document.getElementById(elementId);
+            if (!container) return;
+
+            let interval = setInterval(() => {
+                if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
+                    container.scrollLeft = 0;
                 } else {
-                    card.style.display = "none"; 
+                    container.scrollLeft += 1;
                 }
+            }, 25);
+
+            container.addEventListener('mouseenter', () => clearInterval(interval));
+            container.addEventListener('mouseleave', () => {
+                interval = setInterval(() => {
+                    if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 1) {
+                        container.scrollLeft = 0;
+                    } else {
+                        container.scrollLeft += 1;
+                    }
+                }, 25);
             });
+
+            scrollTimers.push(interval);
+        }
+
+        async function inicializarHome() {
+            limparScrolls();
+            const main = document.getElementById('mainContainer');
+
+            main.innerHTML = `
+                <div class="fileira-secao">
+                    <div class="fileira-titulo">🔥 Fileira 1: Animes Populares</div>
+                    <div class="carrossel-container" id="rowPopularAnimes"><p class="loading-text">Carregando animes...</p></div>
+                </div>
+                <div class="fileira-secao">
+                    <div class="fileira-titulo">📖 Fileira 2: Mangás Populares</div>
+                    <div class="carrossel-container" id="rowPopularMangas"><p class="loading-text">Carregando mangás...</p></div>
+                </div>
+            `;
+
+            await carregarCarrossel('https://api.jikan.moe/v4/top/anime?limit=12', 'rowPopularAnimes', 'anime');
+            await new Promise(r => setTimeout(r, 800));
+            await carregarCarrossel('https://api.jikan.moe/v4/top/manga?limit=12', 'rowPopularMangas', 'manga');
+        }
+
+        async function carregarCarrossel(url, elementId, tipoPadrao) {
+            const container = document.getElementById(elementId);
+            try {
+                const res = await fetch(url);
+                const json = await res.json();
+                if (json.data && json.data.length > 0) {
+                    container.innerHTML = json.data.map(item => criarCardHTML(item, tipoPadrao)).join('');
+                    ativarAutoScroll(elementId);
+                } else {
+                    container.innerHTML = `<p style="color:var(--texto-cinza); font-size:12px;">Nenhum item disponível.</p>`;
+                }
+            } catch (err) {
+                container.innerHTML = `<p style="color:var(--texto-cinza); font-size:12px;">Erro ao carregar dados.</p>`;
+            }
+        }
+
+        async function carregarPaginaEspecifica() {
+            limparScrolls();
+            const main = document.getElementById('mainContainer');
+            const ehAnime = currentTab === 'anime';
+            const tituloArea = ehAnime ? '📺 Catalogados para Assistir (Animes)' : '📖 Catalogados para Ler (Mangás)';
+            
+            main.innerHTML = `
+                <div class="fileira-titulo">${tituloArea}</div>
+                <div class="grid-pesquisa" id="gridEspecífica"><p class="loading-text">Carregando acervo...</p></div>
+            `;
+
+            const grid = document.getElementById('gridEspecífica');
+            const endpoint = ehAnime 
+                ? 'https://api.jikan.moe/v4/top/anime?limit=24' 
+                : 'https://api.jikan.moe/v4/top/manga?limit=24';
+
+            try {
+                const res = await fetch(endpoint);
+                const json = await res.json();
+                grid.innerHTML = json.data.map(item => criarCardHTML(item, ehAnime ? 'anime' : 'manga')).join('');
+            } catch (err) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; color: var(--texto-cinza); text-align: center;">Erro ao carregar lista.</p>`;
+            }
+        }
+
+        async function executarPesquisa() {
+            limparScrolls();
+            const query = document.getElementById('searchBar').value.trim();
+            const genre = document.getElementById('genreFilter').value;
+            const main = document.getElementById('mainContainer');
+
+            if (!query && !genre) {
+                if (currentTab === 'all') inicializarHome();
+                else if (currentTab === 'fav') carregarFavoritos();
+                else carregarPaginaEspecifica();
+                return;
+            }
+
+            if (currentTab === 'fav') {
+                const filtrados = favoritos.filter(item => {
+                    const matchQuery = !query || item.title.toLowerCase().includes(query.toLowerCase());
+                    const matchGenre = !genre || (item.genres && item.genres.some(g => g.mal_id == genre));
+                    return matchQuery && matchGenre;
+                });
+
+                main.innerHTML = `
+                    <div class="fileira-titulo">🔍 Resultados em Favoritos</div>
+                    <div class="grid-pesquisa" id="gridPesquisa"></div>
+                `;
+                const grid = document.getElementById('gridPesquisa');
+                grid.innerHTML = filtrados.length > 0 
+                    ? filtrados.map(item => criarCardHTML(item)).join('')
+                    : `<p style="grid-column: 1/-1; color: var(--texto-cinza); text-align: center; padding: 20px;">Nenhum favorito encontrado.</p>`;
+                return;
+            }
+
+            main.innerHTML = `
+                <div class="fileira-titulo">🔍 Resultados Encontrados</div>
+                <div class="grid-pesquisa" id="gridPesquisa"><p class="loading-text">Buscando no acervo...</p></div>
+            `;
+
+            const grid = document.getElementById('gridPesquisa');
+            
+            try {
+                let resultados = [];
+
+                const montarUrl = (tipo) => {
+                    const params = new URLSearchParams();
+                    if (query) params.append('q', query);
+                    if (genre) params.append('genres', genre);
+                    params.append('limit', '12');
+                    params.append('sfw', 'true');
+                    return `https://api.jikan.moe/v4/${tipo}?${params.toString()}`;
+                };
+
+                if (currentTab === 'all') {
+                    const [resAnime, resManga] = await Promise.all([
+                        fetch(montarUrl('anime')).then(r => r.json()),
+                        fetch(montarUrl('manga')).then(r => r.json())
+                    ]);
+
+                    const animes = (resAnime.data || []).map(i => ({ ...i, media_type: 'anime' }));
+                    const mangas = (resManga.data || []).map(i => ({ ...i, media_type: 'manga' }));
+
+                    // Intercala os resultados de animes e mangás
+                    const maxLen = Math.max(animes.length, mangas.length);
+                    for (let i = 0; i < maxLen; i++) {
+                        if (animes[i]) resultados.push({ item: animes[i], tipo: 'anime' });
+                        if (mangas[i]) resultados.push({ item: mangas[i], tipo: 'manga' });
+                    }
+                } else {
+                    const tipo = currentTab;
+                    const res = await fetch(montarUrl(tipo));
+                    const json = await res.json();
+                    resultados = (json.data || []).map(i => ({ item: i, tipo: tipo }));
+                }
+
+                if (resultados.length === 0) {
+                    grid.innerHTML = `<p style="grid-column: 1/-1; color: var(--texto-cinza); text-align: center; padding: 20px;">Nenhum item encontrado.</p>`;
+                    return;
+                }
+
+                grid.innerHTML = resultados.map(r => criarCardHTML(r.item, r.tipo)).join('');
+            } catch (err) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; color: var(--texto-cinza); text-align: center;">Erro de conexão com a API. Tente novamente em instantes.</p>`;
+            }
+        }
+
+        function criarCardHTML(item, forcarTipo = null) {
+            const autor = item.studios?.[0]?.name || item.authors?.[0]?.name || 'Autor / Estúdio';
+            const imagem = item.images?.jpg?.large_image_url || item.images?.jpg?.image_url;
+            
+            let tipo = forcarTipo;
+            if (!tipo) {
+                tipo = (item.type && item.type.toLowerCase().includes('manga')) ? 'manga' : 'anime';
+            }
+
+            const textoBotao = tipo === 'anime' ? '📺 Assistir' : '📖 Ler';
+            const descricao = item.synopsis || 'Sem sinopse disponível.';
+            const isFav = favoritos.some(f => f.mal_id === item.mal_id);
+            const itemDataEncoded = encodeURIComponent(JSON.stringify(item));
+
+            return `
+                <article>
+                    <button class="btn-fav" data-id="${item.mal_id}" onclick="toggleFavorito('${itemDataEncoded}')" title="${isFav ? 'Remover dos Favoritos' : 'Favoritar'}">
+                        ${isFav ? '★' : '☆'}
+                    </button>
+                    <img src="${imagem}" alt="${item.title}" onerror="this.src='https://via.placeholder.com/220x240?text=Sem+Imagem'">
+                    <div class="artigo-info">
+                        <div>
+                            <span class="artigo-autor">${autor}</span>
+                            <h3 title="${item.title}">${item.title}</h3>
+                            <p>${descricao}</p>
+                        </div>
+                        <button class="btn-read" onclick="abrirCapitulos('${itemDataEncoded}', '${tipo}')">
+                            ${textoBotao}
+                        </button>
+                    </div>
+                </article>
+            `;
+        }
+
+        function abrirCapitulos(itemDataEncoded, tipo) {
+            const item = JSON.parse(decodeURIComponent(itemDataEncoded));
+            const modal = document.getElementById('modalCapitulos');
+            
+            document.getElementById('modalTitulo').textContent = item.title;
+            const capitulosGrid = document.getElementById('capitulosGrid');
+            const trailerArea = document.getElementById('trailerArea');
+
+            capitulosGrid.innerHTML = '';
+            trailerArea.innerHTML = '';
+            voltarParaLista();
+
+            if (item.trailer && item.trailer.embed_url) {
+                trailerArea.innerHTML = `
+                    <iframe src="${item.trailer.embed_url}" frameborder="0" allowfullscreen></iframe>
+                `;
+            }
+
+            const total = tipo === 'anime' ? 12 : 20;
+            const rotulo = tipo === 'anime' ? 'Episódio' : 'Capítulo';
+
+            for (let i = 1; i <= total; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'capitulo-btn';
+                btn.textContent = `${rotulo} ${i}`;
+                btn.onclick = () => carregarConteudo(item.title, tipo, i);
+                capitulosGrid.appendChild(btn);
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function carregarConteudo(titulo, tipo, numero) {
+            document.getElementById('listaCapitulosArea').style.display = 'none';
+            document.getElementById('trailerArea').style.display = 'none';
+
+            const viewer = document.getElementById('viewerContainer');
+            const viewerTitle = document.getElementById('viewerTitle');
+            const viewerContent = document.getElementById('viewerContent');
+
+            viewer.style.display = 'flex';
+            viewerTitle.textContent = `${titulo} - ${tipo === 'anime' ? 'Episódio' : 'Capítulo'} ${numero}`;
+
+            if (tipo === 'manga') {
+                viewerContent.innerHTML = `
+                    <p style="font-size:11px; color:var(--texto-cinza);">Página 1 de 1</p>
+                    <div style="background:#fff; color:#000; padding:40px; font-weight:bold; border-radius:6px; text-align:center; width: 100%;">
+                        📖 Modo de Leitura - Capítulo ${numero}
+                    </div>
+                `;
+            } else {
+                viewerContent.innerHTML = `
+                    <div class="video-player">
+                        <div style="text-align:center;">
+                            <p style="font-size:36px; margin-bottom:8px;">▶️</p>
+                            <p style="font-size:13px; font-weight:bold; color:var(--amarelo-destaque);">Reproduzindo ${titulo} - Ep. ${numero}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function voltarParaLista() {
+            document.getElementById('listaCapitulosArea').style.display = 'block';
+            document.getElementById('trailerArea').style.display = 'block';
+            document.getElementById('viewerContainer').style.display = 'none';
+        }
+
+        function fecharModal() {
+            document.getElementById('modalCapitulos').style.display = 'none';
+        }
+
+        window.onclick = function(e) {
+            if (e.target === document.getElementById('modalCapitulos')) fecharModal();
         }
     </script>
 </body>
 </html>
+
+```
