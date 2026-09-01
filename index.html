@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -450,7 +449,6 @@
 
     <main id="mainContainer"></main>
 
-    <!-- Modal com Player de Trailer e Episódios -->
     <div id="modalCapitulos" class="modal">
         <div class="modal-content">
             <span class="close-btn" onclick="fecharModal()">&times;</span>
@@ -471,7 +469,6 @@
         </div>
     </div>
 
-    <!-- Sistema de Alertas (Toast) -->
     <div id="toast" class="toast"></div>
 
     <script>
@@ -479,6 +476,10 @@
         let searchTimeout = null;
         let scrollTimers = [];
         let favoritos = JSON.parse(localStorage.getItem('favoritosHub') || '[]');
+        
+        let paginaAtualManga = 1;
+        let totalPaginasManga = 6;
+        let mangaAtualInfo = { titulo: '', capitulo: 1 };
 
         window.addEventListener('DOMContentLoaded', inicializarHome);
 
@@ -599,7 +600,7 @@
             `;
 
             await carregarCarrossel('https://api.jikan.moe/v4/top/anime?limit=12', 'rowPopularAnimes', 'anime');
-            await new Promise(r => setTimeout(r, 800));
+            await new Promise(r => setTimeout(r, 400));
             await carregarCarrossel('https://api.jikan.moe/v4/top/manga?limit=12', 'rowPopularMangas', 'manga');
         }
 
@@ -685,35 +686,31 @@
             try {
                 let resultados = [];
 
-                const montarUrl = (tipo) => {
+                const buscarEndpoint = async (tipo) => {
                     const params = new URLSearchParams();
                     if (query) params.append('q', query);
                     if (genre) params.append('genres', genre);
                     params.append('limit', '12');
-                    params.append('sfw', 'true');
-                    return `https://api.jikan.moe/v4/${tipo}?${params.toString()}`;
+                    params.append('order_by', 'popularity');
+                    
+                    const res = await fetch(`https://api.jikan.moe/v4/${tipo}?${params.toString()}`);
+                    if (!res.ok) return [];
+                    const json = await res.json();
+                    return (json.data || []).map(i => ({ item: i, tipo: tipo }));
                 };
 
                 if (currentTab === 'all') {
-                    const [resAnime, resManga] = await Promise.all([
-                        fetch(montarUrl('anime')).then(r => r.json()),
-                        fetch(montarUrl('manga')).then(r => r.json())
-                    ]);
+                    const animes = await buscarEndpoint('anime');
+                    await new Promise(r => setTimeout(r, 400)); // Previne limite de requisições Jikan (429)
+                    const mangas = await buscarEndpoint('manga');
 
-                    const animes = (resAnime.data || []).map(i => ({ ...i, media_type: 'anime' }));
-                    const mangas = (resManga.data || []).map(i => ({ ...i, media_type: 'manga' }));
-
-                    // Intercala os resultados de animes e mangás
                     const maxLen = Math.max(animes.length, mangas.length);
                     for (let i = 0; i < maxLen; i++) {
-                        if (animes[i]) resultados.push({ item: animes[i], tipo: 'anime' });
-                        if (mangas[i]) resultados.push({ item: mangas[i], tipo: 'manga' });
+                        if (animes[i]) resultados.push(animes[i]);
+                        if (mangas[i]) resultados.push(mangas[i]);
                     }
                 } else {
-                    const tipo = currentTab;
-                    const res = await fetch(montarUrl(tipo));
-                    const json = await res.json();
-                    resultados = (json.data || []).map(i => ({ item: i, tipo: tipo }));
+                    resultados = await buscarEndpoint(currentTab);
                 }
 
                 if (resultados.length === 0) {
@@ -723,7 +720,7 @@
 
                 grid.innerHTML = resultados.map(r => criarCardHTML(r.item, r.tipo)).join('');
             } catch (err) {
-                grid.innerHTML = `<p style="grid-column: 1/-1; color: var(--texto-cinza); text-align: center;">Erro de conexão com a API. Tente novamente em instantes.</p>`;
+                grid.innerHTML = `<p style="grid-column: 1/-1; color: var(--texto-cinza); text-align: center;">Erro na busca. Tente novamente.</p>`;
             }
         }
 
@@ -736,7 +733,7 @@
                 tipo = (item.type && item.type.toLowerCase().includes('manga')) ? 'manga' : 'anime';
             }
 
-            const textoBotao = tipo === 'anime' ? '📺 Assistir' : '📖 Ler';
+            const textoBotao = tipo === 'anime' ? '📺 Assistir' : '📖 Ler Mangá';
             const descricao = item.synopsis || 'Sem sinopse disponível.';
             const isFav = favoritos.some(f => f.mal_id === item.mal_id);
             const itemDataEncoded = encodeURIComponent(JSON.stringify(item));
@@ -786,14 +783,14 @@
                 const btn = document.createElement('button');
                 btn.className = 'capitulo-btn';
                 btn.textContent = `${rotulo} ${i}`;
-                btn.onclick = () => carregarConteudo(item.title, tipo, i);
+                btn.onclick = () => carregarConteudo(item.title, tipo, i, item);
                 capitulosGrid.appendChild(btn);
             }
 
             modal.style.display = 'flex';
         }
 
-        function carregarConteudo(titulo, tipo, numero) {
+        function carregarConteudo(titulo, tipo, numero, item) {
             document.getElementById('listaCapitulosArea').style.display = 'none';
             document.getElementById('trailerArea').style.display = 'none';
 
@@ -805,12 +802,10 @@
             viewerTitle.textContent = `${titulo} - ${tipo === 'anime' ? 'Episódio' : 'Capítulo'} ${numero}`;
 
             if (tipo === 'manga') {
-                viewerContent.innerHTML = `
-                    <p style="font-size:11px; color:var(--texto-cinza);">Página 1 de 1</p>
-                    <div style="background:#fff; color:#000; padding:40px; font-weight:bold; border-radius:6px; text-align:center; width: 100%;">
-                        📖 Modo de Leitura - Capítulo ${numero}
-                    </div>
-                `;
+                paginaAtualManga = 1;
+                totalPaginasManga = 8;
+                mangaAtualInfo = { titulo, capitulo: numero, capa: item?.images?.jpg?.large_image_url || '' };
+                renderizarLeitorManga();
             } else {
                 viewerContent.innerHTML = `
                     <div class="video-player">
@@ -820,6 +815,34 @@
                         </div>
                     </div>
                 `;
+            }
+        }
+
+        function renderizarLeitorManga() {
+            const viewerContent = document.getElementById('viewerContent');
+            const seed = Math.abs(mangaAtualInfo.titulo.length * 10 + mangaAtualInfo.capitulo * 5 + paginaAtualManga);
+            const imgUrl = mangaAtualInfo.capa || `https://picsum.photos/seed/${seed}/500/700`;
+
+            viewerContent.innerHTML = `
+                <div style="display:flex; gap:12px; align-items:center; justify-content:center; width:100%;">
+                    <button class="btn-back" onclick="mudarPaginaManga(-1)" ${paginaAtualManga === 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>◄ Anterior</button>
+                    <span style="font-size:13px; font-weight:bold; color:var(--amarelo-destaque);">Página ${paginaAtualManga} de ${totalPaginasManga}</span>
+                    <button class="btn-back" onclick="mudarPaginaManga(1)" ${paginaAtualManga === totalPaginasManga ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>Próxima ►</button>
+                </div>
+                
+                <div style="width:100%; max-width:520px; min-height:480px; background:#000; border:2px solid var(--amarelo-destaque); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:12px;">
+                    <img src="${imgUrl}" alt="Página ${paginaAtualManga}" style="width:100%; max-height:600px; object-fit:contain; border-radius:4px; box-shadow: 0 4px 15px rgba(0,0,0,0.8);">
+                </div>
+
+                <p style="font-size:11px; color:var(--texto-cinza);">Lendo: ${mangaAtualInfo.titulo} | Cap. ${mangaAtualInfo.capitulo}</p>
+            `;
+        }
+
+        function mudarPaginaManga(delta) {
+            const novaPagina = paginaAtualManga + delta;
+            if (novaPagina >= 1 && novaPagina <= totalPaginasManga) {
+                paginaAtualManga = novaPagina;
+                renderizarLeitorManga();
             }
         }
 
@@ -839,5 +862,3 @@
     </script>
 </body>
 </html>
-
-```
